@@ -1,0 +1,80 @@
+-- Database: RYPInsumos
+
+-- DROP DATABASE "RYPInsumos";
+
+CREATE DATABASE "RYPInsumos"
+    WITH 
+    OWNER = "Jeimmy"
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Spanish_Mexico.1252'
+    LC_CTYPE = 'Spanish_Mexico.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+
+CREATE TABLE public.familia
+(
+    id integer NOT NULL DEFAULT nextval('familia_id_seq'::regclass),
+    nombre character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "familiaId" PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.familia
+    OWNER to "Jeimmy";
+
+
+CREATE TABLE public.articulo
+(
+    id integer NOT NULL DEFAULT nextval('articulo_id_seq'::regclass),
+    "familiaID" integer NOT NULL,
+    nombre text COLLATE pg_catalog."default" NOT NULL,
+    unidad text COLLATE pg_catalog."default" NOT NULL,
+    tipo text COLLATE pg_catalog."default" NOT NULL,
+    grupo text COLLATE pg_catalog."default" NOT NULL,
+    serie text COLLATE pg_catalog."default" NOT NULL,
+    parte text COLLATE pg_catalog."default" NOT NULL,
+    precio money NOT NULL,
+    toxico text COLLATE pg_catalog."default" NOT NULL,
+    activo boolean NOT NULL,
+    CONSTRAINT "articuloID" PRIMARY KEY (id),
+    CONSTRAINT familia_fkey FOREIGN KEY ("familiaID")
+        REFERENCES public.familia (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.articulo
+    OWNER to "Jeimmy";
+
+
+CREATE TABLE public.movimiento
+(
+    id integer NOT NULL DEFAULT nextval('movimiento_id_seq'::regclass),
+    "articuloID" integer NOT NULL,
+    fecha date NOT NULL,
+    tipo text COLLATE pg_catalog."default" NOT NULL,
+    cantidad numeric(90,0) NOT NULL,
+    importe money NOT NULL,
+    aplicacion text COLLATE pg_catalog."default" NOT NULL,
+    referencia text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "movimientoID" PRIMARY KEY (id),
+    CONSTRAINT articulo_fkey FOREIGN KEY ("articuloID")
+        REFERENCES public.articulo (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.movimiento
+    OWNER to "Jeimmy";
