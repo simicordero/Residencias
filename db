@@ -11,70 +11,114 @@ CREATE DATABASE "RYPInsumos"
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
 
+-------------------------------------------------------------------------------------------------------------
+-- SCHEMA: public
 
-CREATE TABLE public.familia
+-- DROP SCHEMA public ;
+
+CREATE SCHEMA public
+    AUTHORIZATION postgres;
+
+COMMENT ON SCHEMA public
+    IS 'standard public schema';
+
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+GRANT ALL ON SCHEMA public TO postgres;
+-------------------------------------------------------------------------------------------------------------
+-- Table: public.insumos_familia
+
+-- DROP TABLE public.insumos_familia;
+
+CREATE TABLE public.insumos_familia
 (
-    id integer NOT NULL DEFAULT nextval('familia_id_seq'::regclass),
-    nombre character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "familiaId" PRIMARY KEY (id)
+    id integer NOT NULL DEFAULT nextval('insumos_familia_id_seq'::regclass),
+    nombre character varying(300) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT insumos_familia_pkey PRIMARY KEY (id)
 )
 WITH (
     OIDS = FALSE
 )
 TABLESPACE pg_default;
 
-ALTER TABLE public.familia
-    OWNER to "Jeimmy";
+ALTER TABLE public.insumos_familia
+    OWNER to postgres;
 
+-------------------------------------------------------------------------------------------------------------
+-- Table: public.insumos_articulo
 
-CREATE TABLE public.articulo
+-- DROP TABLE public.insumos_articulo;
+
+CREATE TABLE public.insumos_articulo
 (
-    id integer NOT NULL DEFAULT nextval('articulo_id_seq'::regclass),
-    "familiaID" integer NOT NULL,
-    nombre text COLLATE pg_catalog."default" NOT NULL,
-    unidad text COLLATE pg_catalog."default" NOT NULL,
-    tipo text COLLATE pg_catalog."default" NOT NULL,
-    grupo text COLLATE pg_catalog."default" NOT NULL,
-    serie text COLLATE pg_catalog."default" NOT NULL,
-    parte text COLLATE pg_catalog."default" NOT NULL,
-    precio money NOT NULL,
-    toxico text COLLATE pg_catalog."default" NOT NULL,
+    id integer NOT NULL DEFAULT nextval('insumos_articulo_id_seq'::regclass),
+    nombre character varying(300) COLLATE pg_catalog."default" NOT NULL,
+    unidad character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    tipo character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    grupo character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    serie character varying(300) COLLATE pg_catalog."default" NOT NULL,
+    parte character varying(150) COLLATE pg_catalog."default" NOT NULL,
+    precio character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    toxico character varying(100) COLLATE pg_catalog."default" NOT NULL,
     activo boolean NOT NULL,
-    CONSTRAINT "articuloID" PRIMARY KEY (id),
-    CONSTRAINT familia_fkey FOREIGN KEY ("familiaID")
-        REFERENCES public.familia (id) MATCH SIMPLE
+    "familiaId_id" integer NOT NULL,
+    CONSTRAINT insumos_articulo_pkey PRIMARY KEY (id),
+    CONSTRAINT "insumos_articulo_familiaId_id_8472183a_fk_insumos_familia_id" FOREIGN KEY ("familiaId_id")
+        REFERENCES public.insumos_familia (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
+        DEFERRABLE INITIALLY DEFERRED
 )
 WITH (
     OIDS = FALSE
 )
 TABLESPACE pg_default;
 
-ALTER TABLE public.articulo
-    OWNER to "Jeimmy";
+ALTER TABLE public.insumos_articulo
+    OWNER to postgres;
+-- Index: insumos_articulo_familiaId_id_8472183a
 
+-- DROP INDEX public."insumos_articulo_familiaId_id_8472183a";
 
-CREATE TABLE public.movimiento
+CREATE INDEX "insumos_articulo_familiaId_id_8472183a"
+    ON public.insumos_articulo USING btree
+    ("familiaId_id" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+-------------------------------------------------------------------------------------------------------------
+-- Table: public.insumos_movimiento
+
+-- DROP TABLE public.insumos_movimiento;
+
+CREATE TABLE public.insumos_movimiento
 (
-    id integer NOT NULL DEFAULT nextval('movimiento_id_seq'::regclass),
-    "articuloID" integer NOT NULL,
-    fecha date NOT NULL,
-    tipo text COLLATE pg_catalog."default" NOT NULL,
-    cantidad numeric(90,0) NOT NULL,
-    importe money NOT NULL,
-    aplicacion text COLLATE pg_catalog."default" NOT NULL,
-    referencia text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "movimientoID" PRIMARY KEY (id),
-    CONSTRAINT articulo_fkey FOREIGN KEY ("articuloID")
-        REFERENCES public.articulo (id) MATCH SIMPLE
+    id integer NOT NULL DEFAULT nextval('insumos_movimiento_id_seq'::regclass),
+    fecha timestamp with time zone NOT NULL,
+    tipo character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    cantidad integer NOT NULL,
+    importe character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    aplicacion character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    referencia character varying(500) COLLATE pg_catalog."default" NOT NULL,
+    "articuloId_id" integer NOT NULL,
+    CONSTRAINT insumos_movimiento_pkey PRIMARY KEY (id),
+    CONSTRAINT "insumos_movimiento_articuloId_id_1771afd5_fk_insumos_a" FOREIGN KEY ("articuloId_id")
+        REFERENCES public.insumos_articulo (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
+        DEFERRABLE INITIALLY DEFERRED
 )
 WITH (
     OIDS = FALSE
 )
 TABLESPACE pg_default;
 
-ALTER TABLE public.movimiento
-    OWNER to "Jeimmy";
+ALTER TABLE public.insumos_movimiento
+    OWNER to postgres;
+-- Index: insumos_movimiento_articuloId_id_1771afd5
+
+-- DROP INDEX public."insumos_movimiento_articuloId_id_1771afd5";
+
+CREATE INDEX "insumos_movimiento_articuloId_id_1771afd5"
+    ON public.insumos_movimiento USING btree
+    ("articuloId_id" ASC NULLS LAST)
+    TABLESPACE pg_default;
