@@ -4,13 +4,15 @@ from insumos.models import Articulo
 from insumos.models import Movimiento
  
  
-class InsumoSerializer(serializers.ModelSerializer):
+class FamiliaSerializer(serializers.ModelSerializer):
  
     class Meta:
         model = Familia
         fields = ('id',
                   'nombre')
-    
+
+class ArticuloSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Articulo
         fields = ('id',
@@ -25,6 +27,7 @@ class InsumoSerializer(serializers.ModelSerializer):
                   'toxico',
                   'activo')
 
+class MovimientoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movimiento
         fields = ('id',

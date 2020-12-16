@@ -4,7 +4,7 @@ class Familia(models.Model):
     nombre = models.CharField(max_length=300, blank=False, default='')
 
 class Articulo(models.Model):
-    familiaId = models.ForeignKey('Familia', on_delete=models.CASCADE)
+    familiaId = models.ForeignKey('Familia', on_delete=models.PROTECT)
     nombre = models.CharField(max_length=300, blank=False, default='')
     unidad = models.CharField(max_length=100, blank=False, default='')
     tipo = models.CharField(max_length=50, blank=False, default='')
@@ -16,8 +16,8 @@ class Articulo(models.Model):
     activo =models.BooleanField(default=False)
 
 class Movimiento(models.Model):
-    articuloId = models.ForeignKey('Articulo', on_delete=models.CASCADE)
-    fecha =  models.DateTimeField(auto_now=True)
+    articuloId = models.ForeignKey('Articulo', on_delete=models.PROTECT)
+    fecha =  models.DateField(auto_now=True)
     tipo = models.CharField(max_length=50, blank=False, default='')
     cantidad = models.IntegerField(default='0')
     importe = models.CharField(max_length=100, blank=False, default='')
