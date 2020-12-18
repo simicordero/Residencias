@@ -85,9 +85,9 @@ WSGI_APPLICATION = 'proyectoresidencias.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'RYPInsumos',
+        'NAME': 'PruebaResidencias',
         'USER': 'postgres',
-        'PASSWORD': 'Pareceser09',
+        'PASSWORD': 'simicordero2020',
         'HOST': 'localhost',
         'PORT': '5432'
     }

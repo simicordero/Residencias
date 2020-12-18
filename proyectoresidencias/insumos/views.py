@@ -22,7 +22,9 @@ def familia_list(request):
         if nombre is not None:
             familias = familias.filter(nombre__icontains=nombre)
         familias_serializer = FamiliaSerializer(familias, many=True)
-        return JsonResponse(familias_serializer.data, safe=False)
+        data = familias_serializer.data[:]
+        return render(request,'listarFamilias.html',{'familia': data})
+       # return JsonResponse(familias_serializer.data, safe=False)
         # 'safe=False' for objects serialization
     elif request.method == 'POST':
         familia_data = JSONParser().parse(request)
@@ -35,6 +37,20 @@ def familia_list(request):
         count = Familia.objects.all().delete()
         return JsonResponse({'message': '{} Familias were deleted successfully!'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['GET', 'POST'])
+def familia_list_post(request):
+    if request.method == 'GET':
+        return render(request,'formFamilia.html')
+       # return JsonResponse(familias_serializer.data, safe=False)
+        # 'safe=False' for objects serialization
+    elif request.method == 'POST':
+        familia_data = JSONParser().parse(request)
+        familia_serializer = FamiliaSerializer(data=familia_data)
+        if familia_serializer.is_valid():
+            familia_serializer.save()
+            return JsonResponse(familia_serializer.data, status=status.HTTP_201_CREATED) 
+        return JsonResponse(familia_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
  
 @api_view(['GET', 'POST', 'DELETE'])
 def articulo_list(request):
@@ -45,7 +61,8 @@ def articulo_list(request):
         if nombre is not None:
             articulos = articulos.filter(nombre__icontains=nombre)
         articulos_serializer = ArticuloSerializer(articulos, many=True)
-        return JsonResponse(articulos_serializer.data, safe=False)
+        data = articulos_serializer.data[:]
+        return render(request,'listar.html',{'articulo': data})
         # 'safe=False' for objects serialization
     elif request.method == 'POST':
         articulo_data = JSONParser().parse(request)
@@ -68,7 +85,9 @@ def movimiento_list(request):
         if tipo is not None:
             movimientos = movimientos.filter(tipo__icontains=tipo)
         movimientos_serializer = MovimientoSerializer(movimientos, many=True)
-        return JsonResponse(movimientos_serializer.data, safe=False)
+        data = movimientos_serializer.data[:]
+        return render(request,'listarMov.html',{'familia': data})
+        #return JsonResponse(movimientos_serializer.data, safe=False)
         # 'safe=False' for objects serialization
     elif request.method == 'POST':
         movimiento_data = JSONParser().parse(request)
@@ -149,3 +168,36 @@ def movimiento_detail(request, pk):
             return JsonResponse({'message': 'Movimiento was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)  
     except Movimiento.DoesNotExist: 
         return JsonResponse({'message': 'The movimiento does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+
+def index(request):
+    return render(request,'index.html')
+
+@api_view(['GET', 'POST'])
+def movimiento_list_form(request):
+    # GET list of movimientos, POST a new movimiento, DELETE all movimientos
+    if request.method == 'GET':
+        return render(request,'formMov.html')
+        #return JsonResponse(movimientos_serializer.data, safe=False)
+        # 'safe=False' for objects serialization
+    elif request.method == 'POST':
+        movimiento_data = JSONParser().parse(request)
+        movimiento_serializer = MovimientoSerializer(data=movimiento_data)
+        if movimiento_serializer.is_valid():
+            movimiento_serializer.save()
+            return JsonResponse(movimiento_serializer.data, status=status.HTTP_201_CREATED) 
+        return JsonResponse(movimiento_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def articulo_list_form(request):
+    # GET list of articulos, POST a new articulo, DELETE all articulos
+    if request.method == 'GET':
+        return render(request,'form.html')
+        # 'safe=False' for objects serialization
+    elif request.method == 'POST':
+        articulo_data = JSONParser().parse(request)
+        articulo_serializer = ArticuloSerializer(data=articulo_data)
+        if articulo_serializer.is_valid():
+            articulo_serializer.save()
+            return JsonResponse(articulo_serializer.data, status=status.HTTP_201_CREATED) 
+        return JsonResponse(articulo_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
