@@ -1,5 +1,8 @@
 from django.conf.urls import url 
 from insumos import views 
+
+from django.config import settings
+from django.config.urls.static import static
  
 urlpatterns = [ 
     url(r'^api/familias$', views.familia_list),
@@ -13,4 +16,4 @@ urlpatterns = [
     url(r'^api/formMovimiento/$', views.movimiento_list_form),
     url(r'^api/formArticulo/$', views.articulo_list_form),
 
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

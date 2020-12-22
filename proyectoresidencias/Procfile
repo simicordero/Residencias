@@ -1,0 +1,1 @@
+web: gunicorn proyectosolyarenas.wsgi --log-file -
