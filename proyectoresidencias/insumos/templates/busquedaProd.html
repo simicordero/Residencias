@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-20">
+				<h4 class="text-center mb-4">Buscar Producto por id</h4>
+				
+				<form th:action="@{/RFC}" th:object="${cliente}" method="get">
+					<input type="text" th:field="*{RFC}" class="form-control col-md-4" />
+					<button type="submit" class="btn btn-success mt-4 mb-4">Buscar</button>
+				</form>
+				
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="text-center">idProducto</th>
+                            <th class="text-center">Nombre</th>
+                            <th class="text-center">Unidad</th>
+                            <th class="text-center">Tipo</th>
+                            <th class="text-center">Grupo</th>
+                            <th class="text-center">Serie</th>
+                            <th class="text-center">Parte</th>
+                            <th class="text-center">Precio</th>
+                            <th class="text-center">Toxico</th>
+                            <th class="text-center">Activo</th>
+                            <th class="text-center">Editar cliente</th>
+                            <th class="text-center">Eliminar Cliente</th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<tr th:each="data : ${clientePorRFC}">
+							<td class="text-center" th:text="${cliente.getRFC(RFC)}"></td>
+					<td class="text-center">{{name}}</td>
+					<td class="text-center">{{unidad}}</td>
+                    <td class="text-center">{{Tipo}}</td>
+                    <td class="text-center">{{Grupo}}</td>
+                    <td class="text-center">{{serie}}</td>
+                    <td class="text-center">{{parte}}</td>
+                    <td class="text-center">{{precio}} $</td>
+                    <td class="text-center">{{toxico}}</td>
+                    <td class="text-center">{{activo}}</td>
+					<td class="text-center"><a
+						class="btn btn-primary btn-xs shadow-sm"
+						th:href="@{/posts/} + ${}" th:text="'Editar'"></a></td>
+					<td class="text-center"><a
+						class="btn btn-danger btn-xs shadow-sm"
+						th:href="@{/eliminar/} + ${}" th:text="'Eliminar'"
+						onclick="return confirm('Estas seguro que quiers eliminar este registro?');"></a></td>
+						</tr>
+					</tbody>
+					
+				</table>
+			</div>
+		</div>
+	</div>
+<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>
